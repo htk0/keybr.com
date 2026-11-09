@@ -58,8 +58,8 @@ const pageData = {
   user: null,
   publicUser: {
     id: null,
-    name: "Guest",
-    premium: false,
+    name: "ゲスト",
+    premium: true,
   },
   settings: null,
 };
@@ -69,7 +69,8 @@ const html = `<!DOCTYPE html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Keybr - 日本語タイピング練習 (Kana &amp; Chouonpu)</title>
+    <title>Keybr 日本語版 - US/JIS配列対応 ローマ字タイピング練習</title>
+    <meta name="description" content="Keybrの洗練されたUIのまま日本語入力に対応。US配列・JIS配列両対応、訓令式・ヘボン式シームレス判定、伸ばし棒「ー」の集中特訓ができる完全無料タイピング練習ツール。">
     <link rel="icon" href="./favicon.ico">
 ${cssLinks}
     <script id="page-data">
@@ -80,7 +81,7 @@ ${jsScripts}
   <body>
     <div id="root">
       <div style="display:flex;height:100vh;align-items:center;justify-content:center;font-family:sans-serif;color:#888;">
-        Loading Japanese Typing Tutor...
+        日本語タイピング練習を読み込み中...
       </div>
     </div>
   </body>

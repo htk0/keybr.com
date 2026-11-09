@@ -1546,6 +1546,13 @@ export class Layout implements XEnumItem {
   }
 
   static selectableLayouts(language: Language): Layout[] {
+    if (language.id === "ja") {
+      const latinList = Layout.ALL.filter(
+        (layout) =>
+          layout.language.script === "latin" && layout !== Layout.EN_US,
+      );
+      return [Layout.JA_JP, Layout.EN_US, ...latinList];
+    }
     const list = Layout.ALL.filter(
       (layout) => layout.language.script === language.script,
     );

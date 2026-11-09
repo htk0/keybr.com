@@ -24,7 +24,15 @@ test("find layouts for all languages", () => {
     const layouts = Layout.selectableLayouts(language);
     isNotEmpty(layouts);
     for (const layout of layouts) {
-      equal(layout.language.script, language.script);
+      if (language.id === "ja") {
+        equal(
+          layout.language.script === "hiragana" ||
+            layout.language.script === "latin",
+          true,
+        );
+      } else {
+        equal(layout.language.script, language.script);
+      }
     }
     const layout = Layout.selectLayout(language);
     includes(layouts, layout);

@@ -11,21 +11,10 @@ import { Link as RouterLink } from "react-router";
 import * as styles from "./SubMenu.module.less";
 
 export function SubMenu({ currentPath }: { readonly currentPath: string }) {
-  const { formatMessage } = useIntl();
   return (
     <div className={styles.root}>
-      <MailLink />
-      <DiscordLink />
       <GithubLink />
-      <RouterLink to={Pages.termsOfService.path}>
-        {formatMessage(Pages.termsOfService.link.label)}
-      </RouterLink>
-      <RouterLink to={Pages.privacyPolicy.path}>
-        {formatMessage(Pages.privacyPolicy.link.label)}
-      </RouterLink>
       <LocaleSwitcher currentPath={currentPath} />
-      <TranslateLink />
-      <RemoveAdsLink />
     </div>
   );
 }
