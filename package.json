@@ -27,6 +27,7 @@
     "stylelint-fix": "stylelint '{**/*,*}.{less,css}' --fix",
     "format": "prettier '{**/*,*}.{js,ts,tsx,less,css}' --write",
     "build": "webpack --mode=production",
+    "build-static": "node --enable-source-maps --import=@keybr/tsl scripts/build-static.ts",
     "build-dev": "webpack --mode=development",
     "watch": "webpack --mode=development --watch",
     "start": "node --enable-source-maps ./root/index.js",

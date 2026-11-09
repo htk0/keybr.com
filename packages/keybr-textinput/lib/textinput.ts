@@ -8,6 +8,7 @@ import {
   splitStyledText,
   type StyledText,
 } from "./chars.ts";
+import { KanaAutomaton } from "./kana-automaton.ts";
 import { type TextInputSettings } from "./settings.ts";
 
 export enum Feedback {
@@ -36,6 +37,9 @@ export class TextInput {
   readonly onStep: StepListener;
   readonly #text: string;
   readonly #chars: readonly Char[];
+  readonly #isJapanese: boolean;
+  readonly #kanaAutomaton: KanaAutomaton | null = null;
+  #kanaAccumulatedTimeToType = 0;
   #steps: (Step & { readonly char: Char })[] = [];
   #garbage: (Step & { readonly char: Char })[] = [];
   #typo!: boolean;
@@ -53,6 +57,10 @@ export class TextInput {
     this.onStep = onStep;
     this.#text = flattenStyledText(text);
     this.#chars = splitStyledText(text);
+    this.#isJapanese = /[\u3040-\u30ff]/.test(this.#text);
+    if (this.#isJapanese) {
+      this.#kanaAutomaton = new KanaAutomaton(this.#text);
+    }
     this.reset();
   }
 
@@ -60,6 +68,8 @@ export class TextInput {
     this.#steps = [];
     this.#garbage = [];
     this.#typo = false;
+    this.#kanaAccumulatedTimeToType = 0;
+    this.#kanaAutomaton?.reset();
     this.#update();
   }
 
@@ -76,6 +86,9 @@ export class TextInput {
   }
 
   get completed(): boolean {
+    if (this.#isJapanese && this.#kanaAutomaton != null) {
+      return this.#kanaAutomaton.isCompleted;
+    }
     return this.pos === this.length;
   }
 
@@ -103,10 +116,7 @@ export class TextInput {
   }: {
     readonly timeStamp: number;
     readonly inputType:
-      | "appendChar"
-      | "appendLineBreak"
-      | "clearChar"
-      | "clearWord";
+      "appendChar" | "appendLineBreak" | "clearChar" | "clearWord";
     readonly codePoint: CodePoint;
     readonly timeToType: number;
   }): Feedback {
@@ -123,12 +133,23 @@ export class TextInput {
   }
 
   clearChar(): Feedback {
+    if (this.#isJapanese && this.#kanaAutomaton != null) {
+      this.#kanaAutomaton.backspace();
+      this.#typo = true;
+      return this.#return(Feedback.Succeeded);
+    }
     this.#garbage.pop();
     this.#typo = true;
     return this.#return(Feedback.Succeeded);
   }
 
   clearWord(): Feedback {
+    if (this.#isJapanese && this.#kanaAutomaton != null) {
+      this.#kanaAutomaton.reset();
+      this.#steps = [];
+      this.#typo = true;
+      return this.#return(Feedback.Succeeded);
+    }
     this.#garbage = [];
     while (this.pos > 0 && this.at(this.pos - 1).codePoint !== 0x0020) {
       this.#steps.pop();
@@ -144,6 +165,42 @@ export class TextInput {
   ): Feedback {
     if (this.completed) {
       throw new Error();
+    }
+
+    if (this.#isJapanese && this.#kanaAutomaton != null) {
+      const char = String.fromCodePoint(codePoint);
+      const res = this.#kanaAutomaton.feed(char);
+      if (!res.success) {
+        this.#typo = true;
+        this.#update();
+        return Feedback.Failed;
+      }
+      if (res.completedMora != null) {
+        const step = res.completedMora;
+        const typo = this.#typo || step.typo;
+        const totalTime = this.#kanaAccumulatedTimeToType + timeToType;
+        this.#kanaAccumulatedTimeToType = 0;
+        this.#typo = false;
+        const charObj =
+          this.pos < this.length
+            ? this.at(this.pos)
+            : { codePoint: step.codePoint, attrs: Attr.Normal, cls: null };
+        this.#addStep(
+          {
+            timeStamp,
+            codePoint: step.codePoint,
+            timeToType: totalTime,
+            typo,
+          },
+          charObj,
+        );
+        this.#update();
+        return typo ? Feedback.Recovered : Feedback.Succeeded;
+      } else {
+        this.#kanaAccumulatedTimeToType += timeToType;
+        this.#update();
+        return Feedback.Succeeded;
+      }
     }
 
     const { codePoint: expected } = this.at(this.pos);
@@ -218,6 +275,27 @@ export class TextInput {
   }
 
   #update(): void {
+    if (this.#isJapanese && this.#kanaAutomaton != null) {
+      const text = this.#text;
+      const kanaChars = this.#kanaAutomaton.getKanaChars();
+      const romajiChars = this.#kanaAutomaton.getRomajiChars();
+      const remaining = this.#kanaAutomaton.getRemainingChars();
+      const lines = {
+        text,
+        lines: [
+          { text, chars: kanaChars },
+          {
+            text: romajiChars
+              .map((c) => String.fromCodePoint(c.codePoint))
+              .join(""),
+            chars: romajiChars,
+          },
+        ],
+      };
+      this.#output = { chars: kanaChars, lines, remaining };
+      return;
+    }
+
     const text = this.#text;
     const remaining = this.#chars.slice(this.pos);
     const chars = [];

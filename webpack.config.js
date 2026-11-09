@@ -167,7 +167,7 @@ export default [
     output: {
       path: join(import.meta.dirname, "root", "public", "assets"),
       clean: true,
-      publicPath: "/assets/",
+      publicPath: process.env.PUBLIC_PATH || "/assets/",
       filename: `${filename}.js`,
       chunkFilename: `${chunkFilename}.js`,
       assetModuleFilename: `${assetModuleFilename}[ext]`,

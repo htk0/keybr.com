@@ -613,6 +613,43 @@ test("emoji", () => {
   isTrue(textInput.completed);
 });
 
+test("Japanese typing accepts Romaji and emits Hiragana mora steps", () => {
+  const textInput = new TextInput("らーめん", {
+    stopOnError: true,
+    forgiveErrors: false,
+    spaceSkipsWords: false,
+  });
+
+  isFalse(textInput.completed);
+  equal(textInput.lines.lines.length, 2);
+
+  // Type 'r' then 'a' for 'ら'
+  equal(textInput.appendChar(100, "r".charCodeAt(0), 50), Feedback.Succeeded);
+  isFalse(textInput.completed);
+  equal(textInput.appendChar(200, "a".charCodeAt(0), 50), Feedback.Succeeded);
+  equal(textInput.steps.length, 1);
+  equal(textInput.steps[0].codePoint, "ら".codePointAt(0));
+
+  // Type '-' for 'ー'
+  equal(textInput.appendChar(300, "-".charCodeAt(0), 40), Feedback.Succeeded);
+  equal(textInput.steps.length, 2);
+  equal(textInput.steps[1].codePoint, "ー".codePointAt(0));
+
+  // Type 'm' then 'e' for 'め'
+  equal(textInput.appendChar(400, "m".charCodeAt(0), 45), Feedback.Succeeded);
+  equal(textInput.appendChar(500, "e".charCodeAt(0), 45), Feedback.Succeeded);
+  equal(textInput.steps.length, 3);
+  equal(textInput.steps[2].codePoint, "め".codePointAt(0));
+
+  // Type 'n' then 'n' for 'ん'
+  equal(textInput.appendChar(600, "n".charCodeAt(0), 30), Feedback.Succeeded);
+  equal(textInput.appendChar(700, "n".charCodeAt(0), 30), Feedback.Succeeded);
+  equal(textInput.steps.length, 4);
+  equal(textInput.steps[3].codePoint, "ん".codePointAt(0));
+
+  isTrue(textInput.completed);
+});
+
 function showSteps({ steps }: TextInput) {
   return steps
     .map(({ codePoint, timeStamp, timeToType, typo }) => {

@@ -118,9 +118,9 @@ export class Language implements EnumItem {
   );
   static readonly JA = new Language(
     /* id= */ "ja",
-    /* script= */ "latin",
+    /* script= */ "hiragana",
     /* direction= */ "ltr",
-    /* alphabet= */ "abcdefghijklmnopqrstuvwxyz-",
+    /* alphabet= */ "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょー",
   );
   static readonly LT = new Language(
     /* id= */ "lt",
