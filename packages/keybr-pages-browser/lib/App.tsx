@@ -5,6 +5,7 @@ import {
   PageDataContext,
   Pages,
   Root,
+  usePageData,
 } from "@keybr/pages-shared";
 import { SettingsLoader } from "@keybr/settings-loader";
 import { querySelector } from "@keybr/widget";
@@ -18,7 +19,11 @@ import { ThemeProvider } from "./themes/ThemeProvider.tsx";
 import { Title } from "./Title.tsx";
 
 export function main() {
-  createRoot(querySelector(Root.selector)).render(<App />);
+  const rootElement =
+    document.getElementById("root") ??
+    document.querySelector(Root.selector) ??
+    document.body;
+  createRoot(rootElement).render(<App />);
 }
 
 const AccountPage = lazy(() => import("./pages/account.tsx"));
@@ -50,8 +55,17 @@ export function App() {
 
 function PageRoutes() {
   const { locale } = useIntl();
+  const pageData = usePageData();
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : "";
+  const basename =
+    pageData.base && pageData.base !== "/"
+      ? pageData.base
+      : pathname.startsWith(`/${locale}`)
+        ? `/${locale}`
+        : "";
   return (
-    <BrowserRouter basename={Pages.intlBase(locale)}>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route
           index={true}
