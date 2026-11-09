@@ -196,7 +196,7 @@ const layouts = new Map<Layout, CharacterDict>([
   [Layout.HY_AM_PHONETIC, LAYOUT_HY_AM_PHONETIC],
   [Layout.HY_AM_TYPEWRITER, LAYOUT_HY_AM_TYPEWRITER],
   [Layout.IT_IT, LAYOUT_IT_IT],
-  [Layout.JA_JP, LAYOUT_JA_JP],
+  [Layout.JA_JP, LAYOUT_JA_JP_JIS],
   [Layout.LT_LT, LAYOUT_LT_LT],
   [Layout.LV_LV, LAYOUT_LV_LV],
   [Layout.NB_DVORAK, LAYOUT_NB_DVORAK],

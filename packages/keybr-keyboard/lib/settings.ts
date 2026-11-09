@@ -29,9 +29,9 @@ export enum Emulation {
 }
 
 export const keyboardProps = {
-  language: itemProp("keyboard.language", Language.ALL, Language.EN),
-  layout: xitemProp("keyboard.layout", Layout.ALL, Layout.EN_US),
-  geometry: itemProp("keyboard.geometry", Geometry.ALL, Geometry.ANSI_101),
+  language: itemProp("keyboard.language", Language.ALL, Language.JA),
+  layout: xitemProp("keyboard.layout", Layout.ALL, Layout.JA_JP),
+  geometry: itemProp("keyboard.geometry", Geometry.ALL, Geometry.JAPANESE_106),
   zones: itemProp("keyboard.zones", ZoneMod.ALL, ZoneMod.STANDARD),
   emulation: enumProp("keyboard.emulation", Emulation, Emulation.Forward),
   colors: booleanProp("keyboard.colors", true),
@@ -41,9 +41,9 @@ export const keyboardProps = {
 export class KeyboardOptions {
   static default(): KeyboardOptions {
     return new KeyboardOptions(
-      Language.EN,
-      Layout.EN_US,
-      Geometry.ANSI_101,
+      Language.JA,
+      Layout.JA_JP,
+      Geometry.JAPANESE_106,
       ZoneMod.STANDARD,
     );
   }

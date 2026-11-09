@@ -118,9 +118,9 @@ export class Language implements EnumItem {
   );
   static readonly JA = new Language(
     /* id= */ "ja",
-    /* script= */ "hiragana",
+    /* script= */ "latin",
     /* direction= */ "ltr",
-    /* alphabet= */ "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぇぉゃゅょっー",
+    /* alphabet= */ "abcdefghijklmnopqrstuvwxyz-",
   );
   static readonly LT = new Language(
     /* id= */ "lt",
@@ -227,7 +227,7 @@ export class Language implements EnumItem {
     Language.HU,
     Language.HY,
     Language.IT,
-    // Language.JA,
+    Language.JA,
     Language.LT,
     Language.LV,
     Language.NB,
@@ -379,7 +379,16 @@ export class Language implements EnumItem {
         return codePoint >= 0x0370 && codePoint <= 0x03ff;
       case "hebrew":
         return codePoint >= 0x0590 && codePoint <= 0x05ff;
+      case "hiragana":
+        return (
+          (codePoint >= 0x3040 && codePoint <= 0x309f) ||
+          codePoint === 0x30fc ||
+          this.alphabet.includes(codePoint)
+        );
       case "latin":
+        if (this.alphabet.includes(codePoint)) {
+          return true;
+        }
         // A few Unicode blocks of the Latin script to include only
         // a reasonable list of letter codepoints.
         return (

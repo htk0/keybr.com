@@ -162,7 +162,7 @@
 - `0xad`: English/Graphite Angle KP
 - `0xae`: English/Kuntem
 - `0xaf`: English/Hands Down Promethium Inverted (Matrix)
-- `0xb0`:
+- `0xb0`: Japanese/Japan
 - `0xb1`: Breton/France
 - `0xb2`:
 - `0xb3`:
@@ -243,7 +243,7 @@
 - `0xfe`:
 - `0xff`:
 
-98 allocated identifiers
+99 allocated identifiers
 
-142 free identifiers
+141 free identifiers
 

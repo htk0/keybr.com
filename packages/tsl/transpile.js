@@ -56,7 +56,7 @@ export async function transpile(source, fileName) {
     await f.close();
     await rename(cachedFilename + ".lock", cachedFilename);
   } catch (err) {
-    if (err.code !== "EEXIST") {
+    if (err.code !== "EEXIST" && err.code !== "EPERM") {
       throw err;
     }
   }

@@ -54,7 +54,7 @@ export const typingTestProps = {
   language: itemProp(
     "typingTest.textSource.language",
     Language.ALL,
-    Language.EN,
+    Language.JA,
   ),
   wordList: {
     wordListSize: numberProp("typingTest.wordList.wordListSize", 1000, {

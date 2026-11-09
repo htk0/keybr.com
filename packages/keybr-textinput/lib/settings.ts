@@ -81,7 +81,7 @@ export const textDisplaySettings = {
   caretShapeStyle: CaretShapeStyle.Underline,
   caretMovementStyle: CaretMovementStyle.Smooth,
   whitespaceStyle: WhitespaceStyle.Bullet,
-  language: Language.EN,
+  language: Language.JA,
 } as const satisfies TextDisplaySettings;
 
 export const textDisplayProps = {

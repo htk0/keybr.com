@@ -1,5 +1,7 @@
-import { basename, extname, join } from "node:path";
+import { posix } from "node:path";
 import webpack from "webpack";
+
+const { basename, extname, join } = posix;
 
 const {
   Compilation,
