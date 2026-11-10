@@ -91,3 +91,28 @@ test("KanaAutomaton provides display chars with attrs", () => {
   // next code point is '-'
   equal(auto.nextCodePoint, 0x002d);
 });
+
+test("KanaAutomaton accepts Japanese punctuation (、 and 。) via comma and dot", () => {
+  const auto = new KanaAutomaton("はい、そうです。");
+  const keys = ["h", "a", "i", ",", "s", "o", "u", "d", "e", "s", "u", "."];
+  const completed: string[] = [];
+  for (const k of keys) {
+    const res = auto.feed(k);
+    ok(res.success, `Expected success for key: ${k}`);
+    if (res.completedMora != null) {
+      completed.push(res.completedMora.kana);
+    }
+  }
+  ok(auto.isCompleted);
+  equal(completed.join(""), "はい、そうです。");
+});
+
+test("KanaAutomaton accepts symbols (!, ?, ・) correctly", () => {
+  const auto = new KanaAutomaton("なに！？・");
+  const keys = ["n", "a", "n", "i", "!", "?", "/"];
+  for (const k of keys) {
+    const res = auto.feed(k);
+    ok(res.success, `Expected success for key: ${k}`);
+  }
+  ok(auto.isCompleted);
+});

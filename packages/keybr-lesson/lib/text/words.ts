@@ -98,34 +98,66 @@ export function mangledWords(
         ({ f }) => f,
         random,
       );
-      switch (codePoint) {
-        case 33:
-          word = `${word}!`;
-          break;
-        case 34:
-          word = `"${word}"`;
-          break;
-        case 39:
-          word = `'${word}'`;
-          break;
-        case 44:
-          word = `${word},`;
-          break;
-        case 45:
-          word = `${word}-${nextWord()}`;
-          break;
-        case 46:
-          word = `${word}.`;
-          break;
-        case 58:
-          word = `${word}:`;
-          break;
-        case 59:
-          word = `${word};`;
-          break;
-        case 63:
-          word = `${word}?`;
-          break;
+      if (language.id === "ja") {
+        switch (codePoint) {
+          case 33:
+            word = `${word}！`;
+            break;
+          case 34:
+            word = `「${word}」`;
+            break;
+          case 39:
+            word = `「${word}」`;
+            break;
+          case 44:
+            word = `${word}、`;
+            break;
+          case 45:
+            word = `${word}ー${nextWord()}`;
+            break;
+          case 46:
+            word = `${word}。`;
+            break;
+          case 58:
+            word = `${word}：`;
+            break;
+          case 59:
+            word = `${word}；`;
+            break;
+          case 63:
+            word = `${word}？`;
+            break;
+        }
+      } else {
+        switch (codePoint) {
+          case 33:
+            word = `${word}!`;
+            break;
+          case 34:
+            word = `"${word}"`;
+            break;
+          case 39:
+            word = `'${word}'`;
+            break;
+          case 44:
+            word = `${word},`;
+            break;
+          case 45:
+            word = `${word}-${nextWord()}`;
+            break;
+          case 46:
+            word = `${word}.`;
+            break;
+          case 58:
+            word = `${word}:`;
+            break;
+          case 59:
+            word = `${word};`;
+            break;
+          case 63:
+            word = `${word}?`;
+            break;
+        }
       }
     }
     return word;
