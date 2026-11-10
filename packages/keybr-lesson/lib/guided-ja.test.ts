@@ -1,4 +1,4 @@
-import { equal,ok } from "node:assert/strict";
+import { equal, ok } from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { test } from "node:test";
@@ -51,7 +51,7 @@ test("GuidedLesson with Language.JA initializes Japanese Hiragana keys and gener
     );
   }
 
-  // Generate lesson text
+  // Generate lesson text (Japanese text length should be ~1/2 of English to match Romaji keystrokes)
   const fragment = lesson.generate(keys, GuidedLesson.rng);
   ok(
     typeof fragment === "string" && fragment.length > 0,
@@ -60,5 +60,9 @@ test("GuidedLesson with Language.JA initializes Japanese Hiragana keys and gener
   ok(
     /[\u3040-\u30ff]/.test(fragment),
     `Generated fragment should be Hiragana: ${fragment}`,
+  );
+  ok(
+    fragment.length >= 40 && fragment.length <= 80,
+    `Japanese fragment length should be ~50-70 characters (half of English), got: ${fragment.length}`,
   );
 });
