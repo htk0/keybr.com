@@ -17,13 +17,13 @@ import {
   uniqueWords,
 } from "./text/words.ts";
 
-const JAPANESE_ORDER =
-  "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんーがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽっゃゅょぁぃぅぇぉ";
+const JAPANESE_FREQUENCY_ORDER =
+  "いうかしたあてとなにのくけこさすそまきおえはれるらちもんよりめーっわやゆつせほろみねひむぬふがぎじでだどごぞばびぶべぼぱげぐざずぜぴゃゅょぁぃぅぇぉぢづぽぺぷへを";
 
 function getJapaneseLetterOrder(letters: Iterable<Letter>): Letter[] {
   const orderMap = new Map<number, number>();
   let idx = 0;
-  for (const char of JAPANESE_ORDER) {
+  for (const char of JAPANESE_FREQUENCY_ORDER) {
     orderMap.set(char.codePointAt(0)!, idx++);
   }
   return [...letters].sort((a, b) => {

@@ -16,9 +16,9 @@ export function SubMenu({
 function GithubLink() {
   return (
     <StaticLink
-      href="https://github.com/aradzie/keybr.com"
+      href="https://github.com/htk0/keybr.com"
       target="github"
-      title="Keybr.comのオープンソース版をベースにした日本語向けフォークプロジェクトです。"
+      title="Keybr.com (by Alex Radzievskiy) の日本語最適化フォーク (htk0/keybr.com)"
     >
       GitHub (Forked)
     </StaticLink>
