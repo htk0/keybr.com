@@ -278,19 +278,10 @@ export class TextInput {
     if (this.#isJapanese && this.#kanaAutomaton != null) {
       const text = this.#text;
       const kanaChars = this.#kanaAutomaton.getKanaChars();
-      const romajiChars = this.#kanaAutomaton.getRomajiChars();
       const remaining = this.#kanaAutomaton.getRemainingChars();
       const lines = {
         text,
-        lines: [
-          { text, chars: kanaChars },
-          {
-            text: romajiChars
-              .map((c) => String.fromCodePoint(c.codePoint))
-              .join(""),
-            chars: romajiChars,
-          },
-        ],
+        lines: [{ text, chars: kanaChars }],
       };
       this.#output = { chars: kanaChars, lines, remaining };
       return;

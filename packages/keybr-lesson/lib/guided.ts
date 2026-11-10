@@ -17,6 +17,22 @@ import {
   uniqueWords,
 } from "./text/words.ts";
 
+const JAPANESE_ORDER =
+  "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんーがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽっゃゅょぁぃぅぇぉ";
+
+function getJapaneseLetterOrder(letters: Iterable<Letter>): Letter[] {
+  const orderMap = new Map<number, number>();
+  let idx = 0;
+  for (const char of JAPANESE_ORDER) {
+    orderMap.set(char.codePointAt(0)!, idx++);
+  }
+  return [...letters].sort((a, b) => {
+    const orderA = orderMap.get(a.codePoint) ?? 999;
+    const orderB = orderMap.get(b.codePoint) ?? 999;
+    return orderA - orderB || a.codePoint - b.codePoint;
+  });
+}
+
 export class GuidedLesson extends Lesson {
   readonly dictionary: Dictionary;
 
@@ -28,14 +44,14 @@ export class GuidedLesson extends Lesson {
   ) {
     super(settings, keyboard, model);
     this.dictionary = new Dictionary(
-      filterWordList(wordList, this.codePoints).filter(
-        (word) => word.length > 2,
+      filterWordList(wordList, this.codePoints).filter((word) =>
+        model.language.id === "ja" ? word.length >= 2 : word.length > 2,
       ),
     );
   }
 
   override get letters() {
-    return this.model.letters;
+    return this.#getLetters();
   }
 
   override update(keyStatsMap: KeyStatsMap) {
@@ -131,6 +147,9 @@ export class GuidedLesson extends Lesson {
   #getLetters() {
     const { letters } = this.model;
     const { codePoints } = this;
+    if (this.model.language.id === "ja") {
+      return getJapaneseLetterOrder(letters);
+    }
     if (this.settings.get(lessonProps.guided.keyboardOrder)) {
       return Letter.weightedFrequencyOrder(letters, ({ codePoint }) =>
         codePoints.weight(codePoint),

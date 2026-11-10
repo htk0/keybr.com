@@ -108,48 +108,27 @@ function RemoveAdsLink() {
 }
 
 function LocaleSwitcher({ currentPath }: { readonly currentPath: string }) {
-  const { formatLanguageName, formatLocalLanguageName } = useIntlDisplayNames();
+  const { formatLocalLanguageName } = useIntlDisplayNames();
   const preferredLocale = usePreferredLocale();
-  const primary = [];
-  primary.push(
-    <StaticLink
-      className={styles.localeLink}
-      href={Pages.intlPath(currentPath, preferredLocale)}
-    >
-      {formatLocalLanguageName(preferredLocale)}
-    </StaticLink>,
-  );
-  if (preferredLocale !== defaultLocale) {
-    primary.push(
+  return (
+    <div className={styles.localeList}>
       <StaticLink
         className={styles.localeLink}
-        href={Pages.intlPath(currentPath, defaultLocale)}
+        href={Pages.intlPath(currentPath, preferredLocale)}
       >
-        {formatLocalLanguageName(defaultLocale)}
-      </StaticLink>,
-    );
-  }
-  const secondary = [];
-  for (const locale of allLocales) {
-    if (locale !== preferredLocale && locale !== defaultLocale) {
-      if (secondary.length > 0) {
-        secondary.push(" ");
-      }
-      secondary.push(
-        <StaticLink
-          className={styles.localeLink}
-          href={Pages.intlPath(currentPath, locale)}
-          title={`${formatLocalLanguageName(locale)} / ${formatLanguageName(locale)}`}
-        >
-          {locale}
-        </StaticLink>,
-      );
-    }
-  }
-  return (
-    <>
-      {...primary}
-      <span className={styles.localeList}>{...secondary}</span>
-    </>
+        {formatLocalLanguageName(preferredLocale)}
+      </StaticLink>
+      {preferredLocale !== defaultLocale && (
+        <>
+          {" / "}
+          <StaticLink
+            className={styles.localeLink}
+            href={Pages.intlPath(currentPath, defaultLocale)}
+          >
+            {formatLocalLanguageName(defaultLocale)}
+          </StaticLink>
+        </>
+      )}
+    </div>
   );
 }
