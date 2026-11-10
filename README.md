@@ -1,3 +1,15 @@
+# Keybr 日本語版 (Fork)
+
+本プロジェクトは、[aradzie/keybr.com](https://github.com/aradzie/keybr.com)（ライセンス: AGPLv3）をベースに、日本語ローマ字入力および US配列/JIS配列向けに最適化したオープンソース・フォークです。
+
+### 特徴
+- **訓令式・ヘボン式シームレス判定**: `si`/`shi`, `ti`/`chi`, `tu`/`tsu`, `hu`/`fu` 等のどちらを入力しても自動でミスなく判定。
+- **自然なひらがな順アンロック**: 母音（あいうえお）から始まり、徐々に使える単語が増えていく合理的な学習ステップ。
+- **伸ばし棒「ー」集中特訓**: US配列（`-`キー）およびJIS配列の両方で運指ガイドに対応。
+- **完全ローカル動作**: サーバーやDBを必要とせず、ブラウザの `localStorage` で進捗やスコアが安全に保存されます。
+
+---
+
 [![CI](https://github.com/aradzie/keybr.com/actions/workflows/ci.yml/badge.svg)](https://github.com/aradzie/keybr.com/actions/workflows/ci.yml)
 
 # [keybr.com](https://www.keybr.com/) is not (just) a typing test

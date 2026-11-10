@@ -291,7 +291,16 @@ export function HelpPage() {
       <section>
         <h2>Keybr 日本語版について</h2>
         <p>
-          本サイトは、洗練されたタッチタイピング練習ツール「Keybr」を日本語ローマ字入力およびUS配列/JIS配列向けに最適化した特別版です。
+          本サイトは、Alex
+          Radzievskiy氏によって開発・公開されているオープンソースのタイピング練習ツール「
+          <a
+            href="https://github.com/aradzie/keybr.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Keybr.com
+          </a>
+          」をベースに、日本語ローマ字入力およびUS配列/JIS配列向けに最適化した非公式フォーク（派生版）です。
         </p>
 
         <h3>1. 訓令式・ヘボン式シームレス両対応</h3>

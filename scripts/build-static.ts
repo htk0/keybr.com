@@ -70,7 +70,7 @@ const html = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Keybr 日本語版 - US/JIS配列対応 ローマ字タイピング練習</title>
-    <meta name="description" content="Keybrの洗練されたUIのまま日本語入力に対応。US配列・JIS配列両対応、訓令式・ヘボン式シームレス判定、伸ばし棒「ー」の集中特訓ができる完全無料タイピング練習ツール。">
+    <meta name="description" content="Keybr.comのオープンソースフォーク版。Keybrの洗練されたUIのまま日本語入力に対応。US配列・JIS配列両対応、訓令式・ヘボン式シームレス判定、伸ばし棒「ー」の集中特訓ができる完全無料タイピング練習ツール。">
     <link rel="icon" href="./favicon.ico">
     <script>
       (function() {
