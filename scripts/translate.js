@@ -30,11 +30,14 @@ function findSourceFiles() {
 async function extractTranslations() {
   const defaultTranslationsFile = translationsPath(defaultLocale);
   const defaultTranslations = JSON.parse(
-    await extract(findSourceFiles(), {
-      additionalFunctionNames: [],
-      additionalComponentNames: [],
-      preserveWhitespace: true,
-    }),
+    await extract(
+      findSourceFiles().map((f) => f.replaceAll("\\", "/")),
+      {
+        additionalFunctionNames: [],
+        additionalComponentNames: [],
+        preserveWhitespace: true,
+      },
+    ),
   );
   writeJsonSync(
     defaultTranslationsFile,
@@ -94,7 +97,7 @@ async function compileMessages() {
     );
     const messagesFile = messagesPath(locale);
     const messages = JSON.parse(
-      await compile([mergedTranslationsFile], {
+      await compile([mergedTranslationsFile.replaceAll("\\", "/")], {
         ast: true,
         format,
       }),

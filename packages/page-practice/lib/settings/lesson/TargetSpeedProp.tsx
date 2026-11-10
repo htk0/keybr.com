@@ -20,7 +20,8 @@ export function TargetSpeedProp(): ReactNode {
   const { formatSpeed } = useFormatter();
   const { settings, updateSettings } = useSettings();
   const targetSpeed = settings.get(lessonProps.targetSpeed);
-  const kpm = Math.round(targetSpeed * 5);
+  const kpm = Math.round(targetSpeed);
+  const wpm = Math.round((targetSpeed / 5) * 10) / 10;
   return (
     <>
       <FieldList>
@@ -78,8 +79,8 @@ export function TargetSpeedProp(): ReactNode {
         <Description>
           <FormattedMessage
             id="settings.targetSpeed.jaGuideline"
-            defaultMessage="Guideline for Japanese typing: {targetSpeed} WPM ≒ {kpm} KPM (keystrokes/min) ≒ e-typing score {kpm}. (Beginner: 100-150 KPM, Intermediate: 150-200 KPM, Advanced: 200+ KPM)"
-            values={{ targetSpeed, kpm }}
+            defaultMessage="Guideline for Japanese typing: {wpm} WPM ≒ {kpm} KPM (keystrokes/min) ≒ e-typing score {kpm}. (Beginner: 100-150 KPM, Intermediate: 150-200 KPM, Advanced: 200+ KPM)"
+            values={{ wpm, kpm }}
           />
         </Description>
         <Description>
