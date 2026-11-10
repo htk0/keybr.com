@@ -149,7 +149,9 @@ export class Session {
     while (true) {
       const mark = generator.mark();
       const word = generator.nextWord();
-      if (line.length > 0 && line.length + word.length + 1 > numCols) {
+      const curLen = getVisualLength(line);
+      const wordLen = getVisualLength(word);
+      if (curLen > 0 && curLen + wordLen + 1 > numCols) {
         generator.reset(mark);
         break;
       }
@@ -157,4 +159,27 @@ export class Session {
     }
     return line;
   }
+}
+
+function getVisualLength(str: string): number {
+  let len = 0;
+  for (const ch of str) {
+    const code = ch.codePointAt(0) ?? 0;
+    // CJK and fullwidth characters take 2 visual columns
+    if (
+      (code >= 0x1100 && code <= 0x11ff) ||
+      (code >= 0x2e80 && code <= 0xa4cf) ||
+      (code >= 0xac00 && code <= 0xd7a3) ||
+      (code >= 0xf900 && code <= 0xfaff) ||
+      (code >= 0xfe10 && code <= 0xfe19) ||
+      (code >= 0xfe30 && code <= 0xfe6f) ||
+      (code >= 0xff00 && code <= 0xff60) ||
+      (code >= 0xffe0 && code <= 0xffe6)
+    ) {
+      len += 2;
+    } else {
+      len += 1;
+    }
+  }
+  return len;
 }
