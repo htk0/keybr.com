@@ -65,4 +65,14 @@ test("GuidedLesson with Language.JA initializes Japanese Hiragana keys and gener
     fragment.length >= 40 && fragment.length <= 80,
     `Japanese fragment length should be ~50-70 characters (half of English), got: ${fragment.length}`,
   );
+
+  // Frequency order must include high-frequency kana 'と' and 'く'
+  const to = lesson.letters.find((l) => l.codePoint === "と".codePointAt(0)!);
+  ok(to != null, "'と' must be included in letters");
+  const ku = lesson.letters.find((l) => l.codePoint === "く".codePointAt(0)!);
+  ok(ku != null, "'く' must be included in letters");
+
+  // Small kana 'ょ' must be present in letters
+  const lyo = lesson.letters.find((l) => l.codePoint === "ょ".codePointAt(0)!);
+  ok(lyo != null, "'ょ' must be included in letters");
 });

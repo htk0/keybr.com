@@ -107,6 +107,28 @@ test("KanaAutomaton accepts Japanese punctuation (、 and 。) via comma and dot
   equal(completed.join(""), "はい、そうです。");
 });
 
+test("KanaAutomaton provides both base and small kana codePoints for contracted sounds (youon)", () => {
+  const auto = new KanaAutomaton("きょう");
+  const res1 = auto.feed("k");
+  ok(res1.success);
+  const res2 = auto.feed("y");
+  ok(res2.success);
+  const res3 = auto.feed("o");
+  ok(res3.success);
+  ok(res3.completedMora != null);
+  equal(res3.completedMora.kana, "きょ");
+  equal(res3.completedMora.codePoints.length, 2);
+  equal(res3.completedMora.codePoints[0], "き".codePointAt(0)!);
+  equal(res3.completedMora.codePoints[1], "ょ".codePointAt(0)!);
+
+  const res4 = auto.feed("u");
+  ok(res4.success);
+  ok(res4.completedMora != null);
+  equal(res4.completedMora.kana, "う");
+  equal(res4.completedMora.codePoints[0], "う".codePointAt(0)!);
+  ok(auto.isCompleted);
+});
+
 test("KanaAutomaton accepts symbols (!, ?, ・) correctly", () => {
   const auto = new KanaAutomaton("なに！？・");
   const keys = ["n", "a", "n", "i", "!", "?", "/"];

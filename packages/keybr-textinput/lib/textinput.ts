@@ -22,6 +22,7 @@ export type Step = {
   readonly codePoint: CodePoint;
   readonly timeToType: number;
   readonly typo: boolean;
+  readonly keystrokes?: number;
 };
 
 export type StepListener = (step: Step) => void;
@@ -181,19 +182,26 @@ export class TextInput {
         const totalTime = this.#kanaAccumulatedTimeToType + timeToType;
         this.#kanaAccumulatedTimeToType = 0;
         this.#typo = false;
-        const charObj =
-          this.pos < this.length
-            ? this.at(this.pos)
-            : { codePoint: step.codePoint, attrs: Attr.Normal, cls: null };
-        this.#addStep(
-          {
-            timeStamp,
-            codePoint: step.codePoint,
-            timeToType: totalTime,
-            typo,
-          },
-          charObj,
-        );
+        const codePoints = step.codePoints ?? [step.codePoint];
+        const splitTime = totalTime / codePoints.length;
+        const totalKeystrokes = step.typedRomaji.length;
+        const splitKeystrokes = totalKeystrokes / codePoints.length;
+        for (const cp of codePoints) {
+          const charObj =
+            this.pos < this.length
+              ? this.at(this.pos)
+              : { codePoint: cp, attrs: Attr.Normal, cls: null };
+          this.#addStep(
+            {
+              timeStamp,
+              codePoint: cp,
+              timeToType: splitTime,
+              typo,
+              keystrokes: splitKeystrokes,
+            },
+            charObj,
+          );
+        }
         this.#update();
         return typo ? Feedback.Recovered : Feedback.Succeeded;
       } else {

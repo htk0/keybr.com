@@ -18,7 +18,7 @@ import {
 } from "./text/words.ts";
 
 const JAPANESE_FREQUENCY_ORDER =
-  "いうかしたのんするてにがはきこまでなょだをもつじろおりれらちあせけさっよゅそどえひーほめみわやばゃぶふねむごぎげずびざゆぜべぐへぞぼぱぷづぽぃぴぬぺぇぁぉぢぅ";
+  "いうかしたあてとなにのくけこさすそまきおえはれるらちもんよりめーっわやゆつせほろみねひむぬふがぎじでだどごぞばびぶべぼぱげぐざずぜぴゃゅょぁぃぅぇぉぢづぽぺぷへを";
 
 function getJapaneseLetterOrder(letters: Iterable<Letter>): Letter[] {
   const orderMap = new Map<number, number>();

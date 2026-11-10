@@ -650,6 +650,36 @@ test("Japanese typing accepts Romaji and emits Hiragana mora steps", () => {
   isTrue(textInput.completed);
 });
 
+test("TextInput records steps for all constituent kana in Japanese contracted sounds (youon)", () => {
+  const textInput = new TextInput("きょう", {
+    stopOnError: true,
+    forgiveErrors: false,
+    spaceSkipsWords: false,
+  });
+
+  // Type "kyo" -> completes "きょ" (both 'き' and 'ょ' recorded as steps)
+  textInput.appendChar(100, "k".codePointAt(0)!, 50);
+  textInput.appendChar(200, "y".codePointAt(0)!, 50);
+  textInput.appendChar(300, "o".codePointAt(0)!, 50);
+
+  equal(textInput.pos, 2);
+  equal(textInput.steps.length, 2);
+  equal(String.fromCodePoint(textInput.steps[0].codePoint), "き");
+  equal(String.fromCodePoint(textInput.steps[1].codePoint), "ょ");
+  equal(textInput.steps[0].keystrokes! + textInput.steps[1].keystrokes!, 3);
+
+  // Type "u" -> completes "う"
+  textInput.appendChar(400, "u".codePointAt(0)!, 100);
+  equal(textInput.pos, 3);
+  equal(textInput.steps.length, 3);
+  equal(String.fromCodePoint(textInput.steps[2].codePoint), "う");
+  isTrue(textInput.completed);
+
+  // Check stats calculation based on real keystrokes
+  const stats = makeStats(textInput.steps);
+  equal(stats.length, 4); // 'k', 'y', 'o', 'u' = 4 keystrokes
+});
+
 function showSteps({ steps }: TextInput) {
   return steps
     .map(({ codePoint, timeStamp, timeToType, typo }) => {

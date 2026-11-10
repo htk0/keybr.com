@@ -4,6 +4,7 @@ import { Attr, type Char } from "./chars.ts";
 export type MoraToken = {
   readonly kana: string;
   readonly codePoint: CodePoint;
+  readonly codePoints: readonly CodePoint[];
   readonly defaultRomaji: string;
   readonly validRomaji: readonly string[];
 };
@@ -11,6 +12,7 @@ export type MoraToken = {
 export type AutomatonStep = {
   readonly kana: string;
   readonly codePoint: CodePoint;
+  readonly codePoints: readonly CodePoint[];
   readonly typedRomaji: string;
   readonly typo: boolean;
 };
@@ -320,6 +322,7 @@ export class KanaAutomaton {
         const completed: AutomatonStep = {
           kana: "ん",
           codePoint: token.codePoint,
+          codePoints: token.codePoints,
           typedRomaji: "n",
           typo: this.#typo,
         };
@@ -351,6 +354,7 @@ export class KanaAutomaton {
       const step: AutomatonStep = {
         kana: token.kana,
         codePoint: token.codePoint,
+        codePoints: token.codePoints,
         typedRomaji: exact,
         typo: this.#typo,
       };
@@ -512,6 +516,7 @@ export function tokenizeKana(text: string): MoraToken[] {
         tokens.push({
           kana: pair,
           codePoint: pair.codePointAt(0)!,
+          codePoints: [pair.codePointAt(0)!, pair.codePointAt(1)!],
           defaultRomaji: valid[0],
           validRomaji: valid,
         });
@@ -526,6 +531,7 @@ export function tokenizeKana(text: string): MoraToken[] {
     tokens.push({
       kana: ch,
       codePoint: ch.codePointAt(0)!,
+      codePoints: [ch.codePointAt(0)!],
       defaultRomaji: valid[0],
       validRomaji: valid,
     });
