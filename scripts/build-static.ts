@@ -72,6 +72,18 @@ const html = `<!DOCTYPE html>
     <title>Keybr 日本語版 - US/JIS配列対応 ローマ字タイピング練習</title>
     <meta name="description" content="Keybrの洗練されたUIのまま日本語入力に対応。US配列・JIS配列両対応、訓令式・ヘボン式シームレス判定、伸ばし棒「ー」の集中特訓ができる完全無料タイピング練習ツール。">
     <link rel="icon" href="./favicon.ico">
+    <script>
+      (function() {
+        try {
+          var raw = localStorage.getItem("prefs") || (document.cookie.match(/(?:^|; )prefs=([^;]*)/) || [])[1];
+          if (raw) {
+            var prefs = JSON.parse(decodeURIComponent(raw));
+            if (prefs && prefs.color) document.documentElement.setAttribute("data-color", prefs.color);
+            if (prefs && prefs.font) document.documentElement.setAttribute("data-font", prefs.font);
+          }
+        } catch (e) {}
+      })();
+    </script>
 ${cssLinks}
     <script id="page-data">
       var __PAGE_DATA__ = ${JSON.stringify(pageData)};
