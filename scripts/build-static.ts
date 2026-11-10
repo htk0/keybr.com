@@ -42,14 +42,27 @@ for (const file of ["favicon.ico", "cover.png", "robots.txt"]) {
   }
 }
 
+const normalizeAssetPath = (path: string) => {
+  const clean = path
+    .replace(/^(?:\/|auto\/|\.\/)/, "")
+    .replace(/^assets\//, "");
+  return `./assets/${clean}`;
+};
+
 // Generate CSS link tags
 const cssLinks = (browserAssets.css || [])
-  .map((href: string) => `    <link rel="stylesheet" href=".${href}">`)
+  .map(
+    (href: string) =>
+      `    <link rel="stylesheet" href="${normalizeAssetPath(href)}">`,
+  )
   .join("\n");
 
 // Generate JS script tags
 const jsScripts = (browserAssets.js || [])
-  .map((src: string) => `    <script defer src=".${src}"></script>`)
+  .map(
+    (src: string) =>
+      `    <script defer src="${normalizeAssetPath(src)}"></script>`,
+  )
   .join("\n");
 
 const pageData = {

@@ -58,12 +58,33 @@ function PageRoutes() {
   const pageData = usePageData();
   const pathname =
     typeof window !== "undefined" ? window.location.pathname : "";
+
+  // If hosted on GitHub Pages (e.g. /keybr.com/), detect the repository base path
+  let repoPrefix = "";
+  if (typeof window !== "undefined") {
+    const match = pathname.match(/^(\/[^/]+)/);
+    if (
+      match &&
+      match[1] !== `/${locale}` &&
+      match[1] !== "/practice" &&
+      match[1] !== "/help" &&
+      match[1] !== "/layouts" &&
+      match[1] !== "/profile" &&
+      match[1] !== "/typing-test" &&
+      match[1] !== "/account"
+    ) {
+      repoPrefix = match[1];
+    }
+  }
+
   const basename =
     pageData.base && pageData.base !== "/"
       ? pageData.base
-      : pathname.startsWith(`/${locale}`)
-        ? `/${locale}`
-        : "";
+      : repoPrefix
+        ? repoPrefix
+        : pathname.startsWith(`/${locale}`)
+          ? `/${locale}`
+          : "";
   return (
     <BrowserRouter basename={basename}>
       <Routes>

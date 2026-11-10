@@ -17,7 +17,8 @@ const manifest = JSON.parse(
 const browserJs = manifest.entrypoints.browser.assets.js;
 console.log("Browser JS bundles:", browserJs);
 for (const js of browserJs) {
-  const p = join(rootDir, "dist", js);
+  const clean = js.replace(/^(?:\/|auto\/|\.\/)/, "").replace(/^assets\//, "");
+  const p = join(rootDir, "dist/assets", clean);
   if (!existsSync(p)) {
     throw new Error(`Missing bundle: ${p}`);
   }
