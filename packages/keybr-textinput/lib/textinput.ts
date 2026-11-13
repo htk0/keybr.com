@@ -186,7 +186,8 @@ export class TextInput {
         const splitTime = totalTime / codePoints.length;
         const totalKeystrokes = step.typedRomaji.length;
         const splitKeystrokes = totalKeystrokes / codePoints.length;
-        for (const cp of codePoints) {
+        for (let i = 0; i < codePoints.length; i++) {
+          const cp = codePoints[i];
           const charObj =
             this.pos < this.length
               ? this.at(this.pos)
@@ -196,7 +197,7 @@ export class TextInput {
               timeStamp,
               codePoint: cp,
               timeToType: splitTime,
-              typo,
+              typo: i === 0 ? typo : false,
               keystrokes: splitKeystrokes,
             },
             charObj,

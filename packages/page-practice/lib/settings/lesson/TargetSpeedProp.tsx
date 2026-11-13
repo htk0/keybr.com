@@ -1,4 +1,5 @@
 import { Dir } from "@keybr/intl";
+import { keyboardProps, Language } from "@keybr/keyboard";
 import { lessonProps } from "@keybr/lesson";
 import { useFormatter } from "@keybr/lesson-ui";
 import { useSettings } from "@keybr/settings";
@@ -19,6 +20,8 @@ import { FormattedMessage } from "react-intl";
 export function TargetSpeedProp(): ReactNode {
   const { formatSpeed } = useFormatter();
   const { settings, updateSettings } = useSettings();
+  const isJapanese =
+    settings.get(keyboardProps.layout).language === Language.JA;
   const targetSpeed = settings.get(lessonProps.targetSpeed);
   const kpm = Math.round(targetSpeed);
   const wpm = Math.round((targetSpeed / 5) * 10) / 10;
@@ -76,13 +79,15 @@ export function TargetSpeedProp(): ReactNode {
         </Field>
       </FieldList>
       <Explainer>
-        <Description>
-          <FormattedMessage
-            id="settings.targetSpeed.jaGuideline"
-            defaultMessage="Guideline for Japanese typing: {wpm} WPM ≒ {kpm} KPM (keystrokes/min) ≒ e-typing score {kpm}. (Beginner: 100-150 KPM, Intermediate: 150-200 KPM, Advanced: 200+ KPM)"
-            values={{ wpm, kpm }}
-          />
-        </Description>
+        {isJapanese && (
+          <Description>
+            <FormattedMessage
+              id="settings.targetSpeed.jaGuideline"
+              defaultMessage="Guideline for Japanese typing: {wpm} WPM ≒ {kpm} KPM (keystrokes/min) ≒ e-typing score {kpm}. (Beginner: 100-150 KPM, Intermediate: 150-200 KPM, Advanced: 200+ KPM)"
+              values={{ wpm, kpm }}
+            />
+          </Description>
+        )}
         <Description>
           <FormattedMessage
             id="settings.targetSpeed.description"

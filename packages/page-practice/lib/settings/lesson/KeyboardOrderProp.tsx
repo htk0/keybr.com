@@ -1,3 +1,4 @@
+import { keyboardProps, Language } from "@keybr/keyboard";
 import { lessonProps } from "@keybr/lesson";
 import { useSettings } from "@keybr/settings";
 import {
@@ -13,6 +14,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 export function KeyboardOrderProp(): ReactNode {
   const { formatMessage } = useIntl();
   const { settings, updateSettings } = useSettings();
+  if (settings.get(keyboardProps.layout).language === Language.JA) {
+    return null;
+  }
   return (
     <>
       <FieldList>

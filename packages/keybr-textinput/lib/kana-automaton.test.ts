@@ -129,6 +129,31 @@ test("KanaAutomaton provides both base and small kana codePoints for contracted 
   ok(auto.isCompleted);
 });
 
+test("KanaAutomaton accepts Katakana words including loanwords, sokuon ッ, and hatsuon ン", () => {
+  const auto = new KanaAutomaton("パーティー ガッコウ");
+  const keys = [
+    "p",
+    "a",
+    "-",
+    "t",
+    "h",
+    "i",
+    "-",
+    " ",
+    "g",
+    "a",
+    "k",
+    "k",
+    "o",
+    "u",
+  ];
+  for (const k of keys) {
+    const res = auto.feed(k);
+    ok(res.success, `Expected success for key: ${k}`);
+  }
+  ok(auto.isCompleted);
+});
+
 test("KanaAutomaton accepts symbols (!, ?, ・) correctly", () => {
   const auto = new KanaAutomaton("なに！？・");
   const keys = ["n", "a", "n", "i", "!", "?", "/"];

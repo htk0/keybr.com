@@ -184,6 +184,18 @@ const KANA_MAP: Record<string, string[]> = {
   "ゅ": ["xyu", "lyu"],
   "ょ": ["xyo", "lyo"],
 
+  // Extended foreign sounds (e.g. for Katakana loanwords)
+  "ゔ": ["vu"],
+  "ゔぁ": ["va"],
+  "ゔぃ": ["vi"],
+  "ゔぇ": ["ve"],
+  "ゔぉ": ["vo"],
+  "とぅ": ["twu"],
+  "どぅ": ["dwu"],
+  "しぇ": ["she", "sye"],
+  "じぇ": ["je", "zye", "jye"],
+  "ちぇ": ["che", "tye", "cye"],
+
   // Punctuation and symbols
   "、": [","],
   ",": [","],
@@ -311,16 +323,16 @@ export class KanaAutomaton {
     const matching = candidates.filter((c) => c.startsWith(testBuffer));
 
     if (matching.length === 0) {
-      // Special case: Single 'n' for ん followed by consonant of next mora!
+      // Special case: Single 'n' for ん/ン followed by consonant of next mora!
       if (
-        token.kana === "ん" &&
+        toHiragana(token.kana) === "ん" &&
         this.#currentBuffer === "n" &&
         nextToken != null &&
         canFollowSingleN(nextToken, char)
       ) {
         // Complete 'ん' using single 'n'
         const completed: AutomatonStep = {
-          kana: "ん",
+          kana: token.kana,
           codePoint: token.codePoint,
           codePoints: token.codePoints,
           typedRomaji: "n",
@@ -468,8 +480,8 @@ export class KanaAutomaton {
   #getAllCandidates(token: MoraToken, nextToken: MoraToken | null): string[] {
     const list = [...token.validRomaji];
 
-    // Special case for 'っ': can be double of next consonant
-    if (token.kana === "っ" && nextToken != null) {
+    // Special case for 'っ'/'ッ': can be double of next consonant
+    if (toHiragana(token.kana) === "っ" && nextToken != null) {
       for (const nextRomaji of nextToken.validRomaji) {
         const first = nextRomaji[0];
         if (first && /[bcdfghjklmnpqrstvwxyz]/.test(first)) {
@@ -502,17 +514,25 @@ function canFollowSingleN(nextToken: MoraToken, nextChar: string): boolean {
   return false;
 }
 
+/** Converts Katakana characters (ァ-ヶ) to Hiragana (ぁ-ゖ) for lookup. */
+function toHiragana(str: string): string {
+  return str.replace(/[\u30a1-\u30f6]/g, (ch) =>
+    String.fromCharCode(ch.charCodeAt(0) - 0x60),
+  );
+}
+
 /** Tokenizes input Japanese string into morae tokens. */
 export function tokenizeKana(text: string): MoraToken[] {
   const tokens: MoraToken[] = [];
   let i = 0;
 
   while (i < text.length) {
-    // Check 2-character contracted sounds first (e.g. しゃ, きょ, ふぁ)
+    // Check 2-character contracted sounds first (e.g. しゃ, きょ, ふぁ, キャ, ティ)
     if (i + 1 < text.length) {
       const pair = text.substring(i, i + 2);
-      if (KANA_MAP[pair]) {
-        const valid = KANA_MAP[pair];
+      const normalizedPair = toHiragana(pair);
+      if (KANA_MAP[normalizedPair]) {
+        const valid = KANA_MAP[normalizedPair];
         tokens.push({
           kana: pair,
           codePoint: pair.codePointAt(0)!,
@@ -527,7 +547,8 @@ export function tokenizeKana(text: string): MoraToken[] {
 
     // Single character
     const ch = text[i];
-    const valid = KANA_MAP[ch] ?? [ch];
+    const normalizedCh = toHiragana(ch);
+    const valid = KANA_MAP[normalizedCh] ?? [ch];
     tokens.push({
       kana: ch,
       codePoint: ch.codePointAt(0)!,

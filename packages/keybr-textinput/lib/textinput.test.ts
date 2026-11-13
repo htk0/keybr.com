@@ -680,6 +680,27 @@ test("TextInput records steps for all constituent kana in Japanese contracted so
   equal(stats.length, 4); // 'k', 'y', 'o', 'u' = 4 keystrokes
 });
 
+test("TextInput counts a typo during youon only once in stats", () => {
+  const textInput = new TextInput("きょう", {
+    stopOnError: true,
+    forgiveErrors: false,
+    spaceSkipsWords: false,
+  });
+
+  // Type 'k', then wrong key 'x', then 'y', 'o', 'u'
+  equal(textInput.appendChar(100, "k".codePointAt(0)!, 50), Feedback.Succeeded);
+  equal(textInput.appendChar(150, "x".codePointAt(0)!, 50), Feedback.Failed);
+  equal(textInput.appendChar(200, "y".codePointAt(0)!, 50), Feedback.Succeeded);
+  equal(textInput.appendChar(300, "o".codePointAt(0)!, 50), Feedback.Recovered);
+  equal(
+    textInput.appendChar(400, "u".codePointAt(0)!, 100),
+    Feedback.Succeeded,
+  );
+
+  const stats = makeStats(textInput.steps);
+  equal(stats.errors, 1);
+});
+
 function showSteps({ steps }: TextInput) {
   return steps
     .map(({ codePoint, timeStamp, timeToType, typo }) => {
